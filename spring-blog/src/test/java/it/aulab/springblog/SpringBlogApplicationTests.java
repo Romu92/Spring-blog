@@ -37,11 +37,11 @@ class SpringBlogApplicationTests {
 	// serve per fare l'ingenction
 	private JpaAuthorRepository authorRepository;
 
-	@Autowired
-	private CrudAuthorRepository crudAuthorRepository;
+	// @Autowired
+	// private CrudAuthorRepository crudAuthorRepository;
 
-	@Autowired
-	private PagingAndSortingAuthorRepository pAndSAuthorRepository;
+	// @Autowired
+	// private PagingAndSortingAuthorRepository pAndSAuthorRepository;
 
 
 	@BeforeEach
@@ -337,6 +337,46 @@ class SpringBlogApplicationTests {
 				.contains("97", atIndex(9));
 
 	}
+	
+	@Test
+	void customRepository() {
+		List<Author> find = authorRepository.findQualcosa("nn");
+
+		assertThat(find).hasSize(1);
+
+		assertThat(find.get(0))
+				.extracting("firstName")
+				.isEqualTo("Andrea");
+	}
+
+	@Test
+	void sorting3() {
+
+		Author a2 = new Author();
+		a2.setFirstName("Paolo");
+		a2.setLastName("abbrescia");
+		a2.setEmail("paolo@aulab.it");
+
+		entityManager.persist(a2);
+
+		List<Author> sorted = authorRepository.findAll(
+				Sort.by("lastName").descending()
+						.and(
+								Sort.by("firstName").ascending()));
+
+		for (Author a : sorted) {
+			System.out.println("Nome: " + a.getFirstName());
+			System.out.println("Cognome: " + a.getLastName());
+			System.out.println("email: " + a.getEmail());
+		}
+
+		assertThat(sorted)
+				.extracting("firstName")
+				.contains("Andrea", atIndex(0))
+				.contains("Mirko", atIndex(1))
+				.contains("Paolo", atIndex(2));
+	}
+
 
 
 

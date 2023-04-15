@@ -36,7 +36,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import it.aulab.springblog.model.Author;
 
 
-public interface JpaAuthorRepository extends JpaRepository<Author, Long> {
+public interface JpaAuthorRepository extends JpaRepository<Author, Long>, AulabAuthorRepository {
      
     public List<Author> findByLastName(String lastname);
 
